@@ -1,2 +1,2 @@
 # ToDoList
-Creating dynamic list of item with react 
+Creating dynamic list of items with react 
