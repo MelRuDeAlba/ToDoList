@@ -1,5 +1,6 @@
 import React  from 'react';
 import styled from 'styled-components';
+import ListsItems from './ListsItems';
 
 const ListsContainer = styled.div`
     font-size: 15px;
@@ -47,6 +48,10 @@ const ListsUl = styled.ul`
     list-style-type: none;
     margin: 0;
     padding: 0;
+    .input-group {
+        padding: 1em;
+        margin: 0;
+    }
 `;
 
 const ListsItem = styled.li`
@@ -80,6 +85,8 @@ const ListsSubItem = styled.li`
     constructor(props) {
         super(props);
         this.addNew = this.addNew.bind(this);
+        this.deleteElement = this.deleteElement.bind(this);
+        this.addSubList = this.addSubList.bind(this);
         this.state = { 
             toDoList: [
                 {
@@ -107,7 +114,7 @@ const ListsSubItem = styled.li`
     }
 
     renderSubList(items){
-        return items.map( (subItem) => <ListsSubItem key={subItem}>{subItem}</ListsSubItem>)
+        return items.map( (subItem,index) => <ListsSubItem key={subItem+index}>{subItem}</ListsSubItem>)
     }
 
     renderListItems() {
@@ -115,12 +122,13 @@ const ListsSubItem = styled.li`
         return this.state.toDoList.map((function(item) {
             var key = Object.keys(item)[0];                              
             return (
-                <React.Fragment  key={key}>
-                    <ListsItem>{key} <i onClick={() => mthis.deleteElement(key)} className="fas fa-trash-alt"></i> <i onClick={() => mthis.addSubList(key)} className="fas fa-plus-square"></i></ListsItem>
-                    <ListsUl>
-                        {mthis.renderSubList(item[key])}
-                    </ListsUl> 
-                </React.Fragment>
+                <ListsItems 
+                    key={key}
+                    name={key}
+                    deleteElement={mthis.deleteElement}
+                    addSubList={mthis.addSubList}
+                    subListItems={item[key]}
+                />
             )              
         }))
     }
@@ -150,9 +158,13 @@ const ListsSubItem = styled.li`
         }
     }
 
-    addSubList(item) {
-        
-        alert(item);
+    addSubList(item, subtask) {
+        if(subtask) {
+            var node = this.state.toDoList.find(obj => Object.keys(obj)[0] === item);
+            node[item].push(subtask);
+            let newList = Object.assign(this.state.toDoList, node);
+            this.setState({toDoList: newList})
+        }
     }
 
     deleteElement(item){
@@ -172,8 +184,7 @@ const ListsSubItem = styled.li`
                     <div className="input-group-append">
                         <button className="btn" type="button" onClick={this.addNew}><i className="fas fa-plus-square"></i></button>
                     </div>                    
-                </ListsAdd>
-                
+                </ListsAdd>                
                 <ListsUl>
                     {this.renderListItems()}
                 </ListsUl>                
