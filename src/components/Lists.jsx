@@ -61,6 +61,7 @@ const ListsItem = styled.li`
         float: right;
         font-size: 30px;
         cursor: pointer;
+        margin: 0 10px;
         &:hover {
             color: #00ff94;
         }
@@ -87,8 +88,12 @@ const ListsSubItem = styled.li`
                         'english'
                     ]            
                 },
-                'Laundry',
-                'Call Ming',
+                {
+                    'Laundry': []            
+                },
+                {
+                    'Call Ming': []            
+                },
                 {
                     'Read': [
                         'The name of the wind',
@@ -108,22 +113,15 @@ const ListsSubItem = styled.li`
     renderListItems() {
         let mthis =this;
         return this.state.toDoList.map((function(item) {
-            if(typeof item === 'object') {  
-                var key = Object.keys(item)[0];                              
-                return (
-                    <React.Fragment  key={key}>
-                        <ListsItem>{key} <i onClick={mthis.addSubList} className="fas fa-plus-square"></i></ListsItem>
-                        <ListsUl>
-                            {mthis.renderSubList(item[key])}
-                        </ListsUl> 
-                    </React.Fragment>
-                )              
-                
-            } else {
-                return (
-                    <ListsItem key={item}>{item} <i onClick={mthis.addSubList} className="fas fa-plus-square"></i></ListsItem>
-                );
-            }  
+            var key = Object.keys(item)[0];                              
+            return (
+                <React.Fragment  key={key}>
+                    <ListsItem>{key} <i onClick={() => mthis.deleteElement(key)} className="fas fa-trash-alt"></i> <i onClick={() => mthis.addSubList(key)} className="fas fa-plus-square"></i></ListsItem>
+                    <ListsUl>
+                        {mthis.renderSubList(item[key])}
+                    </ListsUl> 
+                </React.Fragment>
+            )              
         }))
     }
 
@@ -134,19 +132,31 @@ const ListsSubItem = styled.li`
     }
 
     addNew() {
-        if(this.state.addNew) {
+        let newNode =  new Object();
+        newNode[this.state.addNew] = [];
+        
+        if(this.state.addNew) {       
             this.setState({
                 toDoList: [
                     ...this.state.toDoList,
-                    this.state.addNew
+                    newNode
                 ],
                 addNew: '',                 
             })
         }
     }
 
-    addSubList(){
-        alert('otro');
+    addSubList(item) {
+        
+        alert(item);
+    }
+
+    deleteElement(item){
+        let newList = this.state.toDoList.filter(function( obj ) {
+            var key = Object.keys(obj)[0];           
+            return key !== item;
+        });
+        this.setState({toDoList: newList})
     }
 
     render() {
