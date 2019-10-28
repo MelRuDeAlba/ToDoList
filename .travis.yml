@@ -1,0 +1,19 @@
+language: node_js
+cache: npm
+node_js:
+  - '8'
+git:
+  depth: 3
+script:
+  - yarn build
+  - echo 'url-personaliza.com' > public/CNAME
+deploy:
+  provider: pages
+  skip-cleanup: true
+  keep-history: true
+  github-token: $GITHUB_TOKEN
+  local-dir: dist/
+  target-branch: master
+  commit_message: "Deploy release ${TRAVIS_TAG}"
+  on:
+    branch: develop
