@@ -132,17 +132,21 @@ const ListsSubItem = styled.li`
     }
 
     addNew() {
-        let newNode =  new Object();
-        newNode[this.state.addNew] = [];
-        
-        if(this.state.addNew) {       
-            this.setState({
-                toDoList: [
-                    ...this.state.toDoList,
-                    newNode
-                ],
-                addNew: '',                 
-            })
+        var inList = this.state.toDoList.find(obj => Object.keys(obj)[0] === this.state.addNew);
+        if(inList) {
+            alert('Ya agregaste ese elemento :P')
+        } else {
+            let newNode =  new Object();
+            newNode[this.state.addNew] = [];        
+            if(this.state.addNew) {       
+                this.setState({
+                    toDoList: [
+                        ...this.state.toDoList,
+                        newNode
+                    ],
+                    addNew: '',                 
+                })
+            }
         }
     }
 
